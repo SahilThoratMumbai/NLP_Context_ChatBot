@@ -8,10 +8,13 @@ from pywsd.lesk import cosine_lesk
 from spellchecker import SpellChecker
 
 # Dynamically set nltk_data path for both local and cloud
-nltk_data_path = os.path.join(os.path.expanduser("~"), "nltk_data")
+nltk_data_path = os.path.join(os.path.dirname(__file__), "nltk_data")
 nltk.data.path.append(nltk_data_path)
 
-# Download NLTK resources safely
+# Debug (optional)
+# st.write("🔍 NLTK data paths:", nltk.data.path)
+
+# Download NLTK resources safely (for local dev only, not needed if you include nltk_data in repo)
 def download_nltk_resource(resource):
     try:
         nltk.data.find(resource)
