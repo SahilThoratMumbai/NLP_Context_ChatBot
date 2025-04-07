@@ -1,20 +1,32 @@
 import streamlit as st
 import nltk
+import os
 from nltk.tokenize import word_tokenize
 from nltk import pos_tag
 from nltk.corpus import wordnet as wn
 from pywsd.lesk import cosine_lesk
 from spellchecker import SpellChecker
 
-# Local nltk_data path (for deployed environments)
-nltk.data.path.append("./nltk_data")
+# Dynamically set nltk_data path for both local and cloud
+nltk_data_path = os.path.join(os.path.expanduser("~"), "nltk_data")
+nltk.data.path.append(nltk_data_path)
 
-# Download resources
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-nltk.download('wordnet')
-nltk.download('omw-1.4')
-nltk.download('stopwords')
+# Download NLTK resources safely
+def download_nltk_resource(resource):
+    try:
+        nltk.data.find(resource)
+    except LookupError:
+        nltk.download(resource.split("/")[-1], download_dir=nltk_data_path)
+
+required_resources = [
+    "tokenizers/punkt",
+    "taggers/averaged_perceptron_tagger",
+    "corpora/wordnet",
+    "corpora/omw-1.4",
+    "corpora/stopwords"
+]
+for res in required_resources:
+    download_nltk_resource(res)
 
 # Spell checker init
 spell = SpellChecker()
